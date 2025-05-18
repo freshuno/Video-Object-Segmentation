@@ -1,6 +1,6 @@
-# 🎥 Object Segmentation in Video – Project (VIRAT + Mask R-CNN)
+# 🎥 Object Segmentation in Video
 
-A system for object segmentation and tracking in video sequences using selected deep learning models (Mask R-CNN, DeepLab, MiVOS, PReMVOS). Currently tested on the **VIRAT** dataset.
+A system for object segmentation and tracking in video sequences using selected deep learning models (Mask R-CNN, DeepLab, MiVOS, PReMVOS).
 
 ---
 
@@ -54,6 +54,9 @@ Download [detectron2-0.6-cp310-cp310-win_amd64.whl](https://github.com/carlosedu
 pip install detectron2-0.6-cp310-cp310-win_amd64.whl
 ```
 
+### 5. Prepare dataset
+Download your video dataset (e.g., .mpg files) and place them inside the data/raw/ folder. 
+
 ---
 
 ## 📂 Project Structure
@@ -76,6 +79,15 @@ segmentation/
 
 ## ▶️ How to Run
 
+To change the input video (or folder) and the output folder where processed results are saved, you need to edit the paths directly in the scripts:
+
+In extract_frames.py modify the path to the video file you want to process (usually near the top of the script).
+
+In test_mask_rcnn.py change the input folder with extracted frames and the output folder where results are saved.
+
+Make sure to update these paths before running the scripts to process different videos or save results to different locations.
+
+
 ### 1. Extract frames from `.mpg` videos
 ```bash
 python extract_frames.py
@@ -86,7 +98,7 @@ python extract_frames.py
 python test_mask_rcnn.py
 ```
 
-Results will be saved in:
+For example results will be saved in:
 ```
 results/mask_rcnn/film1/
 ```

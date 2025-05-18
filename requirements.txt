@@ -1,0 +1,12 @@
+torch
+torchvision
+torchaudio
+opencv-python
+matplotlib
+scikit-learn
+numpy
+tqdm
+ffmpeg-python
+imageio
+imageio-ffmpeg
+git+https://github.com/facebookresearch/detectron2.git

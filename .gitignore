@@ -1,0 +1,29 @@
+# Wykluczenia ogólne
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.ipynb_checkpoints
+.DS_Store
+
+# Anaconda / Virtualenv
+.env/
+.venv/
+env/
+venv/
+*.egg-info/
+conda-meta/
+lib/
+Scripts/
+bin/
+Include/
+
+# System plików / IDE
+.idea/
+.vscode/
+
+# Dane ciężkie lub prywatne
+data/raw/
+data/frames/
+data/annotations/
+results/

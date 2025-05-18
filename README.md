@@ -35,9 +35,6 @@ A system for object segmentation and tracking in video sequences using selected 
 
 ### 2. Create environment
 ```bash
-a) conda env create -f environment.yml
-   conda activate segmentacja
-b) (if a doesn't work)
    conda create -n segmentation python=3.10 -y
    conda activate segmentation
 ```

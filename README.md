@@ -13,8 +13,8 @@ A system for object segmentation and tracking in video sequences using selected 
 
 ## ⚙️ System Requirements
 
-- Python 3.10 (recommended)
-- Anaconda (recommended)
+- Python
+- Anaconda
 - Windows / Linux
 - Optional: GPU with CUDA (for acceleration)
 

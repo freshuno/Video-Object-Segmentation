@@ -27,3 +27,6 @@ data/raw/
 data/frames/
 data/annotations/
 results/
+
+# to jest po to żeby foldery było widać
+git add -f results/mask_rcnn/film1/.gitkeep

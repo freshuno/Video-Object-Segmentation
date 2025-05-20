@@ -76,28 +76,26 @@ segmentation/
 
 ## ▶️ How to Run
 
-To change the input video (or folder) and the output folder where processed results are saved, you need to edit the paths directly in the scripts:
-
-In extract_frames.py modify the path to the video file you want to process (usually near the top of the script).
-
-In test_mask_rcnn.py change the input folder with extracted frames and the output folder where results are saved.
-
-Make sure to update these paths before running the scripts to process different videos or save results to different locations.
+Set paths using command line arguments as needed (check `-h` or `--help`).
 
 
 ### 1. Extract frames from `.mpg` videos
 ```bash
-python extract_frames.py
+python extract_frames.py <path/to/file.mpg> <data/frames/file>
 ```
 
-### 2. Run Mask R-CNN on the extracted frames
+### 2. Run models on the extracted frames
 ```bash
-python test_mask_rcnn.py
+python test_mask_rcnn.py <data/frames/file>
+```
+
+```bash
+python test_mask_deeplabv3.py <data/frames/file>
 ```
 
 For example results will be saved in:
 ```
-results/mask_rcnn/film1/
+results/<model>/file/
 ```
 
 ---

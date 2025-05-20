@@ -1,6 +1,11 @@
 import cv2
-import os
 from pathlib import Path
+import argparse
+
+parser = argparse.ArgumentParser(description="Extract frames from video.")
+parser.add_argument("video_path", type=str, help="Ścieżka do pliku wideo")
+parser.add_argument("output_dir", type=str, help="Ścieżka do katalogu wyjściowego")
+args = parser.parse_args()
 
 def video_to_frames(video_path, output_dir):
     video_path = Path(video_path)
@@ -19,4 +24,4 @@ def video_to_frames(video_path, output_dir):
     cap.release()
     print(f"✅ Zapisano {frame_idx} klatek do folderu: {output_dir}")
 
-video_to_frames("data/raw/video3.mpg", "data/frames/film3")
+video_to_frames(args.video_path, args.output_dir)

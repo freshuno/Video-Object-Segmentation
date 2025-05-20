@@ -61,14 +61,15 @@ Download your video dataset (e.g., .mpg files) and place them inside the data/ra
 ```
 segmentation/
 ├── data/
-│   ├── raw/            # original videos (.mpg)
-│   ├── frames/         # extracted video frames
-│   └── annotations/    # masks (if available)
-├── results/            # generated masks and visualizations
-├── models/             # (for additional models)
-├── scripts/            # (for training/testing)
-├── test_mask_rcnn.py   # Mask R-CNN test script on custom frames
-├── extract_frames.py   # script to extract frames from .mpg
+│   ├── raw/                # original videos (.mpg)
+│   ├── frames/             # extracted video frames
+│   └── annotations/        # masks (if available)
+├── results/                # generated masks and visualizations
+├── models/                 # (for additional models)
+├── scripts/                # (for training/testing)
+├── test_mask_deeplabv3.py  # DeepLab v3+ test script on custom frames
+├── test_mask_rcnn.py       # Mask R-CNN test script on custom frames
+├── extract_frames.py       # script to extract frames from .mpg
 └── README.md
 ```
 

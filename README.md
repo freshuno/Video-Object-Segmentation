@@ -98,7 +98,20 @@ For example results will be saved in:
 ```
 results/<model>/file/
 ```
+MiVOS model:
 
+a) getting all the required models:
+```bash
+python download_model.py
+```
+b) running gui:
+```bash
+python interactive_gui.py --video <path to video>
+```
+or
+```bash
+python interactive_gui.py --images <path to a folder of images>
+```
 ---
 
 ## 🧪 Check if GPU is available

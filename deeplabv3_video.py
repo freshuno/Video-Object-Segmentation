@@ -5,12 +5,15 @@ from torchvision import models, transforms
 from pathlib import Path
 from tqdm import tqdm
 from torchvision.models.segmentation import deeplabv3_mobilenet_v3_large
+import sys
+
 
 def load_deeplab_model():
     model = deeplabv3_mobilenet_v3_large(pretrained=True)
     model.eval()
     model.to("cuda" if torch.cuda.is_available() else "cpu")
     return model
+
 
 def segment_frame(model, image):
     transform = transforms.Compose([
@@ -26,6 +29,7 @@ def segment_frame(model, image):
         output = model(input_tensor)["out"][0]
     prediction = output.argmax(0).byte().cpu().numpy()
     return prediction
+
 
 def apply_colormap(mask):
     colormap = np.array([
@@ -49,26 +53,29 @@ def run_deeplab_on_video(input_video_filename):
         return
 
     model = load_deeplab_model()
-    device = "cuda" if torch.cuda.is_available() else "cpu"
 
     cap = cv2.VideoCapture(str(input_video_path))
-    # ... reszta bez zmian
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = cap.get(cv2.CAP_PROP_FPS)
 
-    output_folder = Path("results") / "deeplabv3Video"
-    output_folder.mkdir(parents=True, exist_ok=True)
+    # Create output folders
+    output_video_folder = Path("results") / "deeplabv3Video"
+    output_video_folder.mkdir(parents=True, exist_ok=True)
 
-    output_filename = input_video_path.stem + "Segmented.mp4"
-    output_path = output_folder / output_filename
+    output_masks_folder = Path("results") / "deeplabv3" / input_video_path.stem
+    output_masks_folder.mkdir(parents=True, exist_ok=True)
 
+    # Video writer setup
+    output_filename = input_video_path.stem + "_segmented.mp4"
+    output_path = output_video_folder / output_filename
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     out = cv2.VideoWriter(str(output_path), fourcc, fps, (width, height))
 
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     pbar = tqdm(total=total_frames, desc="Przetwarzanie wideo")
 
+    frame_count = 0
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
@@ -79,19 +86,27 @@ def run_deeplab_on_video(input_video_filename):
         mask_color = apply_colormap(mask)
         overlay = cv2.addWeighted(frame, 0.5, mask_color, 0.5, 0)
 
+        # Save the overlay video frame
         out.write(overlay)
+
+        # Save both versions of the mask
+        cv2.imwrite(str(output_masks_folder / f"mask_{frame_count:05d}.png"), mask)  # Original 1-channel mask
+        cv2.imwrite(str(output_masks_folder / f"mask_color_{frame_count:05d}.png"), mask_color)  # Color visualization
+
+        frame_count += 1
         pbar.update(1)
 
     cap.release()
     out.release()
-    print(f"✅ Wideo zsegmentowane zapisano w: {output_path}")
+    print(f"\n✅ Wyniki zapisane w:")
+    print(f"- Wideo z segmentacją: {output_path}")
+    print(f"- Maski (oryginalne): {output_masks_folder}/mask_*.png")
+    print(f"- Maski (kolorowe): {output_masks_folder}/mask_color_*.png")
 
 
 if __name__ == "__main__":
-    import sys
-
     if len(sys.argv) < 2:
-        print("❗ Podaj nazwę pliku wideo (np. 1.mpg) jako argument.")
+        print("❗ Użycie: python segment_video.py <nazwa_pliku_wideo>")
+        print("Przykład: python segment_video.py test.mp4")
     else:
         run_deeplab_on_video(sys.argv[1])
-

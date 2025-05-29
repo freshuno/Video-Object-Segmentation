@@ -79,7 +79,7 @@ segmentation/
 
 Set paths using command line arguments as needed (check `-h` or `--help`).
 
-
+## A) Frame-by-Frame Segmentation
 ### 1. Extract frames from videos
 ```bash
 python extract_frames.py <path/to/file.mpg> <data/frames/file>
@@ -113,6 +113,18 @@ or
 python interactive_gui.py --images <path to a folder of images>
 ```
 ---
+
+## B) Video Segmentation
+### 1. Run models on videos (file must be in data/raw directory)
+
+```bash
+python deeplabv3_video.py <file>
+```
+
+For example results will be saved in:
+```
+results/<model>Video/file/
+```
 
 ## 🧪 Check if GPU is available
 

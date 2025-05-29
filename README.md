@@ -52,7 +52,7 @@ pip install detectron2-0.6-cp310-cp310-win_amd64.whl
 ```
 
 ### 5. Prepare dataset
-Download your video dataset (e.g., .mpg files) and place them inside the data/raw/ folder. 
+Download your video dataset and place them inside the data/raw/ folder. 
 
 ---
 
@@ -61,7 +61,7 @@ Download your video dataset (e.g., .mpg files) and place them inside the data/ra
 ```
 segmentation/
 ├── data/
-│   ├── raw/                # original videos (.mpg)
+│   ├── raw/                # original videos
 │   ├── frames/             # extracted video frames
 │   └── annotations/        # masks (if available)
 ├── results/                # generated masks and visualizations
@@ -80,7 +80,7 @@ segmentation/
 Set paths using command line arguments as needed (check `-h` or `--help`).
 
 
-### 1. Extract frames from `.mpg` videos
+### 1. Extract frames from videos
 ```bash
 python extract_frames.py <path/to/file.mpg> <data/frames/file>
 ```

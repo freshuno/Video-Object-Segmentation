@@ -126,6 +126,21 @@ For example results will be saved in:
 results/<model>Video/file/
 ```
 
+## 📏 Evaluate IoU between Model Predictions and Ground Truth
+### Use the following command to run IoU evaluation:
+
+```bash
+python evaluate_iou.py --pred results/mask_rcnn/<video_folder> --gt data/frames/<video_folder>
+```
+--pred is the folder with the model's predicted masks (e.g., mask_00001.png)
+
+--gt is the folder containing ground truth annotations in LabelMe JSON format
+
+The script will:
+- Convert LabelMe JSONs to class masks
+- Align class indices with the COCO dataset (e.g., person=1, car=3, etc.)
+- Compute per-class IoU and display a summary table
+
 ## 🧪 Check if GPU is available
 
 ```bash

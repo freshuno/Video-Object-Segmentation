@@ -127,6 +127,12 @@ results/<model>Video/file/
 ```
 
 ## 📏 Evaluate IoU between Model Predictions and Ground Truth
+### Use the following command to TEST IoU evaluation:
+
+```bash
+python debug_iou.py --pred results/mask_rcnn/<video_folder> --gt data/frames/<video_folder>
+```
+
 ### Use the following command to run IoU evaluation:
 
 ```bash

@@ -1,3 +1,4 @@
+
 # 🎥 Object Segmentation in Video
 
 A system for object segmentation and tracking in video sequences using selected deep learning models (Mask R-CNN, DeepLab, MiVOS, PReMVOS).
@@ -35,8 +36,8 @@ A system for object segmentation and tracking in video sequences using selected 
 
 ### 2. Create environment
 ```bash
-   conda create -n segmentation python=3.10 -y
-   conda activate segmentation
+conda create -n segmentation python=3.10 -y
+conda activate segmentation
 ```
 
 ### 3. Install required libraries
@@ -52,7 +53,7 @@ pip install detectron2-0.6-cp310-cp310-win_amd64.whl
 ```
 
 ### 5. Prepare dataset
-Download your video dataset and place them inside the data/raw/ folder. 
+Download your video dataset and place them inside the `data/raw/` folder. 
 
 ---
 
@@ -94,10 +95,11 @@ python test_mask_rcnn.py <data/frames/file>
 python test_mask_deeplabv3.py <data/frames/file>
 ```
 
-For example results will be saved in:
+Example results will be saved in:
 ```
 results/<model>/file/
 ```
+
 MiVOS model:
 
 a) getting all the required models:
@@ -112,21 +114,48 @@ or
 ```bash
 python interactive_gui.py --images <path to a folder of images>
 ```
+
 ---
 
 ## B) Video Segmentation
-### 1. Run models on videos (file must be in data/raw directory)
+### 1. Run models on videos (file must be in `data/raw` directory)
 
 ```bash
 python deeplabv3_video.py <file>
 ```
 
-For example results will be saved in:
+Example results will be saved in:
 ```
 results/<model>Video/file/
 ```
 
+---
+
+## 🧰 Creating Ground Truth Masks (Using LabelMe)
+
+To generate ground truth annotations from video frames:
+
+### 1. Install LabelMe
+```bash
+pip install labelme
+```
+
+### 2. Launch LabelMe tool
+```bash
+labelme
+```
+
+### 3. Select folder with extracted video frames  
+- Navigate to `data/frames/<video_name>`  
+- Annotate each frame by drawing polygons around objects of interest  
+- Save each annotation — this will create a `.json` file per image
+
+The annotations will be used later for IoU evaluation against model predictions.
+
+---
+
 ## 📏 Evaluate IoU between Model Predictions and Ground Truth
+
 ### Use the following command to TEST IoU evaluation:
 
 ```bash
@@ -138,19 +167,19 @@ python debug_iou.py --pred results/mask_rcnn/<video_folder> --gt data/frames/<vi
 ```bash
 python evaluate_iou.py --pred results/mask_rcnn/<video_folder> --gt data/frames/<video_folder>
 ```
---pred is the folder with the model's predicted masks (e.g., mask_00001.png)
 
---gt is the folder containing ground truth annotations in LabelMe JSON format
+- `--pred` is the folder with the model's predicted masks (e.g., `mask_00001.png`)  
+- `--gt` is the folder containing ground truth annotations in LabelMe JSON format  
 
 The script will:
 - Convert LabelMe JSONs to class masks
 - Align class indices with the COCO dataset (e.g., person=1, car=3, etc.)
 - Compute per-class IoU and display a summary table
 
+---
+
 ## 🧪 Check if GPU is available
 
 ```bash
 python -c "import torch; print(torch.cuda.is_available())"
 ```
-
----

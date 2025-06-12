@@ -80,6 +80,7 @@ project_root/
 ├── evaluate.py        # GUI do zbiorczego podsumowania IoU dla modeli i datasetów
 ├── mask_rcnn.py           # Segmentacja Mask R-CNN (wszystkie filmy, dowolny dataset)
 ├── deeplab.py   # Segmentacja DeepLab (wszystkie filmy, dowolny dataset)
+├── prepare_folders.py   # Przygotowanie folderów
 └── README.md
 ```
 

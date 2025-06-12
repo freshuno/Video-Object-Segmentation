@@ -77,9 +77,9 @@ project_root/
 │           ├── Rcnn/
 │           └── Deeplab/
 ├── debug_iou.py           # GUI do debugowania masek i IoU
-├── evaluate_gui.py        # GUI do zbiorczego podsumowania IoU dla modeli i datasetów
+├── evaluate.py        # GUI do zbiorczego podsumowania IoU dla modeli i datasetów
 ├── mask_rcnn.py           # Segmentacja Mask R-CNN (wszystkie filmy, dowolny dataset)
-├── deeplab_batch_gui.py   # Segmentacja DeepLab (wszystkie filmy, dowolny dataset)
+├── deeplab.py   # Segmentacja DeepLab (wszystkie filmy, dowolny dataset)
 └── README.md
 ```
 
@@ -115,7 +115,7 @@ python mask_rcnn.py
 ```
 ### 2. Segmentacja DeepLab
 ```bash
-python deeplab_batch_gui.py
+python deeplab.py
 ```
 ### 3. Debugowanie masek, podgląd błędów i IoU
 ```bash
@@ -123,7 +123,7 @@ python debug_iou.py
 ```
 ### 4. Zbiorcza ocena IoU (tabela, podsumowanie)
 ```bash
-python evaluate_gui.py
+python evaluate.py
 ```
 
 ---

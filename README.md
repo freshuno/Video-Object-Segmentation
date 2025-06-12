@@ -85,6 +85,18 @@ project_root/
 ```
 
 ---
+---
+
+## 📦 Przygotowanie struktury folderów
+
+Aby zapewnić poprawne działanie wszystkich skryptów i utrzymać porządek w projekcie, **zalecamy uruchomić poniższy program tuż po pobraniu repozytorium**:
+
+```bash
+python prepare_folders.py
+```
+
+Skrypt ten automatycznie utworzy wszystkie wymagane, puste foldery (wraz z plikami .gitkeep) dla datasetów (motion, general itd.), ground truth oraz wyników modeli. Dzięki temu projekt od początku będzie miał prawidłową strukturę katalogów, a pierwsze uruchomienie programów przebiegnie bez problemów.
+
 
 ## 📥 Przygotowanie własnego datasetu
 

@@ -67,7 +67,7 @@ def evaluate_model_iou(dataset, model_name):
 
                 gt_struct = mat["groundTruth"]
                 mask_gt = gt_struct[0, 0]["Segmentation"][0, 0]
-                mask_gt = (mask_gt > 0).astype(np.uint8)
+                mask_gt = binarize_mask(mask_gt)
 
                 if mask_gt.shape != pred_mask.shape:
                     mask_gt = cv2.resize(mask_gt, (pred_mask.shape[1], pred_mask.shape[0]), interpolation=cv2.INTER_NEAREST)
@@ -165,6 +165,12 @@ class ResultsWindow(QWidget):
         vbox.addWidget(summary)
 
         self.setLayout(vbox)
+        
+def binarize_mask(mask_gt):
+    unique, counts = np.unique(mask_gt, return_counts=True)
+    background_value = unique[np.argmax(counts)]
+    return (mask_gt != background_value).astype(np.uint8)
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

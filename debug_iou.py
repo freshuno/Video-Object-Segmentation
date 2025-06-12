@@ -67,12 +67,13 @@ def load_and_prepare_masks(pred_path, gt_path):
     mat = loadmat(str(gt_path))
     gt_struct = mat["groundTruth"]
     mask_gt = gt_struct[0, 0]["Segmentation"][0, 0]
-    mask_gt = (mask_gt > 0).astype(np.uint8)
+    mask_gt = binarize_mask(mask_gt)
 
     if mask_gt.shape != pred_mask.shape:
         mask_gt = cv2.resize(mask_gt, (pred_mask.shape[1], pred_mask.shape[0]), interpolation=cv2.INTER_NEAREST)
 
     return pred_mask, mask_gt
+
 
 def make_error_map(pred_mask, mask_gt):
     error_map = np.zeros((*pred_mask.shape, 3), dtype=np.uint8)
@@ -83,6 +84,13 @@ def make_error_map(pred_mask, mask_gt):
     error_map[fp] = [255, 0, 0]       # Czerwony
     error_map[fn] = [0, 0, 255]       # Niebieski
     return error_map
+
+def binarize_mask(mask_gt):
+    unique, counts = np.unique(mask_gt, return_counts=True)
+    # Przyjmujemy, że tłem jest najczęstsza wartość
+    background_value = unique[np.argmax(counts)]
+    return (mask_gt != background_value).astype(np.uint8)
+
 
 def to_pixmap(mask, is_color=False):
     if not is_color:

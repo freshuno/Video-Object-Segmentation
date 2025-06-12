@@ -18,6 +18,24 @@ def calculate_iou(mask_pred, mask_gt):
         return 1.0 if intersection == 0 else 0.0
     return intersection / union
 
+def binarize_mask(mask_gt):
+    unique, counts = np.unique(mask_gt, return_counts=True)
+    background_value = unique[np.argmax(counts)]
+    return (mask_gt != background_value).astype(np.uint8)
+
+def is_box_mask(mask_gt, min_fill=0.95):
+    """
+    Sprawdza, czy maska jest dużym prostokątem ("bounding box").
+    """
+    ys, xs = np.where(mask_gt > 0)
+    if len(xs) == 0 or len(ys) == 0:
+        return False
+    x0, x1 = xs.min(), xs.max()
+    y0, y1 = ys.min(), ys.max()
+    box = mask_gt[y0:y1+1, x0:x1+1]
+    fill_ratio = box.sum() / box.size
+    return fill_ratio > min_fill
+
 def get_available_datasets():
     base = Path("Results")
     return [f.name for f in base.iterdir() if f.is_dir()]
@@ -33,11 +51,13 @@ def evaluate_model_iou(dataset, model_name):
     gt_base = Path("Data") / dataset / "Groundtruth"
 
     if not pred_base.exists() or not gt_base.exists():
-        return None, None
+        return None, None, 0, 0
 
     folders = [f for f in pred_base.iterdir() if f.is_dir()]
     all_ious = []
     film_to_ious = {}
+    total_masks = 0
+    box_masks = 0
 
     for folder in folders:
         pred_mask_folder = folder / "masks"
@@ -71,9 +91,12 @@ def evaluate_model_iou(dataset, model_name):
 
                 if mask_gt.shape != pred_mask.shape:
                     mask_gt = cv2.resize(mask_gt, (pred_mask.shape[1], pred_mask.shape[0]), interpolation=cv2.INTER_NEAREST)
-
             except Exception:
                 continue
+
+            total_masks += 1
+            if is_box_mask(mask_gt):
+                box_masks += 1
 
             iou = calculate_iou(pred_mask, mask_gt)
             ious.append(iou)
@@ -87,7 +110,7 @@ def evaluate_model_iou(dataset, model_name):
     else:
         overall_mean_iou = None
 
-    return film_to_ious, overall_mean_iou
+    return film_to_ious, overall_mean_iou, total_masks, box_masks
 
 class DatasetModelSelector(QWidget):
     def __init__(self, on_select_callback):
@@ -136,7 +159,7 @@ class DatasetModelSelector(QWidget):
         self.close()
 
 class ResultsWindow(QWidget):
-    def __init__(self, dataset, model_name, film_to_ious, overall_iou):
+    def __init__(self, dataset, model_name, film_to_ious, overall_iou, total_masks, box_masks):
         super().__init__()
         self.setWindowTitle(f"Wyniki IoU – {dataset} / {model_name}")
         vbox = QVBoxLayout()
@@ -155,35 +178,39 @@ class ResultsWindow(QWidget):
         table.setEditTriggers(QTableWidget.NoEditTriggers)
         vbox.addWidget(table)
 
+        # Info o "boxowych" maskach
+        info = ""
+        if total_masks > 0 and box_masks > 0:
+            percent = 100 * box_masks / total_masks
+            info = f"<br> <span style='color:red;'>Uwaga:</span> ok. {percent:.1f}% masek ground truth to prostokąty (bounding box) –<br>wynik IoU może być zawyżony/zaniżony!"
+            info = info.replace(".", ",")  # jeśli chcesz przecinek zamiast kropki
+        else:
+            percent = 0
+
         if overall_iou is not None:
             summary = QLabel(
                 f"<b>Ogólne średnie IoU dla <span style='color:blue'>{dataset}</span> / <span style='color:blue'>{model_name}</span>: "
-                f"<span style='color:green'>{overall_iou:.2f}%</span></b>")
+                f"<span style='color:green'>{overall_iou:.2f}%</span></b>{info}"
+            )
         else:
             summary = QLabel("<b>Brak danych do podsumowania ogólnego.</b>")
         summary.setAlignment(Qt.AlignCenter)
         vbox.addWidget(summary)
 
         self.setLayout(vbox)
-        
-def binarize_mask(mask_gt):
-    unique, counts = np.unique(mask_gt, return_counts=True)
-    background_value = unique[np.argmax(counts)]
-    return (mask_gt != background_value).astype(np.uint8)
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     results_win = None
 
     def launch_results_window(dataset, model_name):
-        film_to_ious, overall_iou = evaluate_model_iou(dataset, model_name)
+        film_to_ious, overall_iou, total_masks, box_masks = evaluate_model_iou(dataset, model_name)
         if film_to_ious is None:
             QMessageBox.critical(None, "Błąd", f"Brak danych do oceny IoU dla: {dataset} / {model_name}")
             sys.exit(1)
         global results_win
-        results_win = ResultsWindow(dataset, model_name, film_to_ious, overall_iou)
-        results_win.resize(500, 400)
+        results_win = ResultsWindow(dataset, model_name, film_to_ious, overall_iou, total_masks, box_masks)
+        results_win.resize(520, 420)
         results_win.show()
 
     selector = DatasetModelSelector(on_select_callback=launch_results_window)

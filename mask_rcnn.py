@@ -4,7 +4,6 @@ import torch
 import warnings
 import numpy as np
 from pathlib import Path
-from tqdm import tqdm
 from detectron2.engine import DefaultPredictor
 from detectron2.config import get_cfg
 from detectron2 import model_zoo
@@ -13,20 +12,20 @@ from detectron2.data import MetadataCatalog
 
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton,
-    QComboBox, QProgressBar, QListWidget, QListWidgetItem, QMessageBox, QSpacerItem, QSizePolicy
+    QComboBox, QProgressBar, QMessageBox, QSpacerItem, QSizePolicy
 )
-from PyQt5.QtCore import Qt, QThread, pyqtSignal
+from PyQt5.QtCore import QThread, pyqtSignal
 
 warnings.filterwarnings("ignore", message="torch.meshgrid")
 
 def load_mask_rcnn_model():
     cfg = get_cfg()
     cfg.merge_from_file(model_zoo.get_config_file(
-        "COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"
+    "COCO-InstanceSegmentation/mask_rcnn_R_101_FPN_3x.yaml"
     ))
-    cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
+    cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.2
     cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(
-        "COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"
+    "COCO-InstanceSegmentation/mask_rcnn_R_101_FPN_3x.yaml"
     )
     cfg.MODEL.DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
     predictor = DefaultPredictor(cfg)

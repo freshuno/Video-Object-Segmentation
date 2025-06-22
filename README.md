@@ -138,6 +138,20 @@ python debug_iou.py
 ```bash
 python evaluate.py
 ```
+### Model MIVOS
+a) Uruchomienie GUI:
+```bash
+python mivos/interactive_gui.py --images ścieżka/do/folderu
+```
+b) Debugowanie masek
+```bash
+python debug_iou_mivos.py --pred mivos/results --gt Data/motion/Groundtruth
+```
+c) Zbiorcza ocena IOU
+```bash
+python evaluate_iou_mivos.py mivos/results Data/motion/Groundtruth
+```
+
 
 ---
 

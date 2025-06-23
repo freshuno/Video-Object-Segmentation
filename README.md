@@ -139,9 +139,9 @@ python debug_iou.py
 python evaluate.py
 ```
 ### Model MIVOS
-a) Uruchomienie GUI:
+a) Uruchomienie GUI (w folderze mivos):
 ```bash
-python mivos/interactive_gui.py --images ścieżka/do/folderu
+python interactive_gui.py --images ścieżka/do/folderu
 ```
 b) Debugowanie masek
 ```bash
